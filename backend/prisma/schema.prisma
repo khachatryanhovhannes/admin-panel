@@ -1,0 +1,144 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Language {
+  id          Int     @id @default(autoincrement())
+  name_en     String
+  name_native String
+  short_code  String  @unique
+  logo_url    String?
+  is_active   Boolean @default(true)
+
+  // Relation fields for translations
+  pageTranslations          PageTranslation[]
+  menuItemTranslations      MenuItemTranslation[]
+  contentBlockTranslations  ContentBlockTranslation[]
+  globalContentTranslations GlobalContentTranslation[]
+}
+
+model Page {
+  id       Int     @id @default(autoincrement())
+  slug     String  @unique
+  isStatic Boolean @default(false)
+  isActive Boolean @default(true)
+
+  // Կապ "PageTranslation"-ի հետ
+  translations PageTranslation[]
+}
+
+model PageTranslation {
+  id       Int     @id @default(autoincrement())
+  title    String
+  content  String
+  seoTitle String?
+  seoDesc  String?
+
+  // Foreign Keys
+  pageId     Int
+  languageId Int
+
+  // Relations
+  page     Page     @relation(fields: [pageId], references: [id])
+  language Language @relation(fields: [languageId], references: [id])
+
+  @@unique([pageId, languageId]) // Չալարում ենք, որ նույն (pageId, languageId)-ից duplicate չլինի
+}
+
+model Menu {
+  id    Int        @id @default(autoincrement())
+  name  String // Եթե մենյուն ինքը նույնպես բազմալեզու է, կարող եք նույն ձևով MenuTranslation սարքել
+  items MenuItem[]
+}
+
+model MenuItem {
+  id       Int     @id @default(autoincrement())
+  url      String
+  parentId Int?
+  menuId   Int
+  order    Int
+  isActive Boolean @default(true)
+
+  // Relations
+  menu     Menu       @relation(fields: [menuId], references: [id])
+  parent   MenuItem?  @relation("MenuItemChildren", fields: [parentId], references: [id])
+  children MenuItem[] @relation("MenuItemChildren")
+
+  translations MenuItemTranslation[]
+}
+
+model MenuItemTranslation {
+  id    Int    @id @default(autoincrement())
+  title String
+
+  // Foreign Keys
+  menuItemId Int
+  languageId Int
+
+  // Relations
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+  language Language @relation(fields: [languageId], references: [id])
+
+  @@unique([menuItemId, languageId])
+}
+
+model ContentBlock {
+  id       Int     @id @default(autoincrement())
+  key      String  @unique
+  isGlobal Boolean @default(false)
+
+  translations ContentBlockTranslation[]
+}
+
+model ContentBlockTranslation {
+  id      Int    @id @default(autoincrement())
+  content String
+
+  // Foreign keys
+  contentBlockId Int
+  languageId     Int
+
+  // Relations
+  contentBlock ContentBlock @relation(fields: [contentBlockId], references: [id])
+  language     Language     @relation(fields: [languageId], references: [id])
+
+  @@unique([contentBlockId, languageId])
+}
+
+model GlobalContent {
+  id  Int    @id @default(autoincrement())
+  key String @unique
+
+  // Եթե GlobalContent-ը նույնպես պետք է բազմալեզու պահել,
+  // ապա կարող եք այն փոխարինել GlobalContentKey / GlobalContentTranslation մոդելներով
+  // կամ ավելացնել translations relation, ինչպես ContentBlock-ում է:
+  translations GlobalContentTranslation[]
+}
+
+model GlobalContentTranslation {
+  id    Int    @id @default(autoincrement())
+  value String
+
+  // Foreign keys
+  globalContentId Int
+  languageId      Int
+
+  // Relations
+  globalContent GlobalContent @relation(fields: [globalContentId], references: [id])
+  language      Language      @relation(fields: [languageId], references: [id])
+
+  @@unique([globalContentId, languageId])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  role      String   @default("admin") // admin, editor, viewer
+  createdAt DateTime @default(now())
+}
