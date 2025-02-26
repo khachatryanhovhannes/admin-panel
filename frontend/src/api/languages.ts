@@ -1,40 +1,27 @@
-import client from "./client";
+import { ILanguage } from "../models";
+import instance from "./client";
 
-export interface Language {
-  id: number;
-  name_en: string;
-  name_native: string;
-  short_code: string;
-  logo_url?: string;
-  is_active: boolean;
-}
+export const fetchAllLanguages = async () => {
+  const data = await instance.get("/language");
+  return data.data;
+};
 
-export async function fetchLanguages(): Promise<Language[]> {
-  const { data } = await client.get("/admin/languages");
-  return data;
-}
+export const createLanguage = async (data: ILanguage) => {
+  const response = await instance.post("/language", data);
+  return response.data;
+};
 
-export async function fetchLanguage(id: number): Promise<Language> {
-  const { data } = await client.get(`/admin/languages/${id}`);
-  return data;
-}
+export const updateLanguage = async (id: number, data: ILanguage) => {
+  const response = await instance.patch(`/language/${id}`, data);
+  return response.data;
+};
 
-export async function createLanguage(
-  payload: Partial<Language>
-): Promise<Language> {
-  const { data } = await client.post("/admin/languages", payload);
-  return data;
-}
+export const deleteLanguage = async (id: number) => {
+  const response = await instance.delete(`/language/${id}`);
+  return response.data;
+};
 
-export async function updateLanguage(
-  id: number,
-  payload: Partial<Language>
-): Promise<Language> {
-  const { data } = await client.patch(`/admin/languages/${id}`, payload);
-  return data;
-}
-
-export async function deleteLanguage(id: number): Promise<Language> {
-  const { data } = await client.delete(`/admin/languages/${id}`);
-  return data;
-}
+export const getLanguageById = async (id: number) => {
+  const response = await instance.get(`/language/${id}`);
+  return response.data;
+};

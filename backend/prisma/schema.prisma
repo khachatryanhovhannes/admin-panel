@@ -8,137 +8,70 @@ datasource db {
 }
 
 model Language {
-  id          Int     @id @default(autoincrement())
-  name_en     String
-  name_native String
-  short_code  String  @unique
-  logo_url    String?
-  is_active   Boolean @default(true)
+  id         Int      @id @default(autoincrement())
+  enName     String
+  nativeName String
+  shortName  String
+  iconUrl    String?
+  isActive   Boolean? @default(true)
 
-  // Relation fields for translations
-  pageTranslations          PageTranslation[]
-  menuItemTranslations      MenuItemTranslation[]
-  contentBlockTranslations  ContentBlockTranslation[]
-  globalContentTranslations GlobalContentTranslation[]
+  navbarItems  Navbar_item[]
+  Text_content Text_content[]
+
+  @@map("language")
 }
 
-model Page {
-  id       Int     @id @default(autoincrement())
-  slug     String  @unique
-  isStatic Boolean @default(false)
-  isActive Boolean @default(true)
-
-  // Կապ "PageTranslation"-ի հետ
-  translations PageTranslation[]
-}
-
-model PageTranslation {
+model Navbar {
   id       Int     @id @default(autoincrement())
   title    String
-  content  String
-  seoTitle String?
-  seoDesc  String?
-
-  // Foreign Keys
-  pageId     Int
-  languageId Int
-
-  // Relations
-  page     Page     @relation(fields: [pageId], references: [id])
-  language Language @relation(fields: [languageId], references: [id])
-
-  @@unique([pageId, languageId]) // Չալարում ենք, որ նույն (pageId, languageId)-ից duplicate չլինի
-}
-
-model Menu {
-  id    Int        @id @default(autoincrement())
-  name  String // Եթե մենյուն ինքը նույնպես բազմալեզու է, կարող եք նույն ձևով MenuTranslation սարքել
-  items MenuItem[]
-}
-
-model MenuItem {
-  id       Int     @id @default(autoincrement())
-  url      String
+  link     String
   parentId Int?
-  menuId   Int
-  order    Int
+  orderId  Int
   isActive Boolean @default(true)
 
-  // Relations
-  menu     Menu       @relation(fields: [menuId], references: [id])
-  parent   MenuItem?  @relation("MenuItemChildren", fields: [parentId], references: [id])
-  children MenuItem[] @relation("MenuItemChildren")
+  parent   Navbar?  @relation("SubNavbars", fields: [parentId], references: [id])
+  children Navbar[] @relation("SubNavbars")
 
-  translations MenuItemTranslation[]
+  items Navbar_item[]
+
+  @@map("navbar")
 }
 
-model MenuItemTranslation {
-  id    Int    @id @default(autoincrement())
-  title String
-
-  // Foreign Keys
-  menuItemId Int
+model Navbar_item {
+  id         Int     @id @default(autoincrement())
+  navId      Int
   languageId Int
+  isActive   Boolean @default(true)
+  text       String
 
-  // Relations
-  menuItem MenuItem @relation(fields: [menuItemId], references: [id])
+  navbar   Navbar   @relation(fields: [navId], references: [id])
   language Language @relation(fields: [languageId], references: [id])
 
-  @@unique([menuItemId, languageId])
+  @@map("navbar_item")
 }
 
-model ContentBlock {
-  id       Int     @id @default(autoincrement())
-  key      String  @unique
-  isGlobal Boolean @default(false)
+model Text {
+  id           Int            @id @default(autoincrement())
+  key          String
+  Text_content Text_content[]
 
-  translations ContentBlockTranslation[]
+  @@map("text")
 }
 
-model ContentBlockTranslation {
-  id      Int    @id @default(autoincrement())
-  content String
+model Text_content {
+  id         Int     @id @default(autoincrement())
+  textId     Int
+  languageId Int
+  content    String?
 
-  // Foreign keys
-  contentBlockId Int
-  languageId     Int
+  text     Text     @relation(fields: [textId], references: [id])
+  language Language @relation(fields: [languageId], references: [id])
 
-  // Relations
-  contentBlock ContentBlock @relation(fields: [contentBlockId], references: [id])
-  language     Language     @relation(fields: [languageId], references: [id])
-
-  @@unique([contentBlockId, languageId])
+  @@map("text_content")
 }
 
-model GlobalContent {
-  id  Int    @id @default(autoincrement())
-  key String @unique
-
-  // Եթե GlobalContent-ը նույնպես պետք է բազմալեզու պահել,
-  // ապա կարող եք այն փոխարինել GlobalContentKey / GlobalContentTranslation մոդելներով
-  // կամ ավելացնել translations relation, ինչպես ContentBlock-ում է:
-  translations GlobalContentTranslation[]
-}
-
-model GlobalContentTranslation {
+model Constants {
   id    Int    @id @default(autoincrement())
+  key   String
   value String
-
-  // Foreign keys
-  globalContentId Int
-  languageId      Int
-
-  // Relations
-  globalContent GlobalContent @relation(fields: [globalContentId], references: [id])
-  language      Language      @relation(fields: [languageId], references: [id])
-
-  @@unique([globalContentId, languageId])
-}
-
-model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  password  String
-  role      String   @default("admin") // admin, editor, viewer
-  createdAt DateTime @default(now())
 }

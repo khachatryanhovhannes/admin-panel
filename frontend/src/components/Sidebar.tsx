@@ -1,4 +1,4 @@
-import { Box, VStack, Link, Icon, Text } from "@chakra-ui/react";
+import { Box, VStack, Icon, Text } from "@chakra-ui/react";
 import { NavLink } from "react-router-dom";
 import { AtSignIcon, EditIcon, SettingsIcon } from "@chakra-ui/icons";
 

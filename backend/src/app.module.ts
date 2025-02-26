@@ -1,21 +1,14 @@
 import { Module } from '@nestjs/common';
 import { PrismaModule } from './prisma/prisma.module';
 import { LanguageModule } from './language/language.module';
-import { MenuModule } from './menu/menu.module';
-import { MenuItemModule } from './menu-item/menu-item.module';
-import { PageModule } from './page/page.module';
-import { ContentBlockModule } from './content-block/content-block.module';
-import { GlobalContentModule } from './global-content/global-content.module';
+import { NavbarModule } from './navbar/navbar.module';
+import { NavbarItemModule } from './navbar_item/navbar_item.module';
+import { TextModule } from './text/text.module';
+import { TextContentModule } from './text_content/text_content.module';
+import { ConstantModule } from './constant/constant.module';
+import { FrontendModule } from './frontend/frontend.module';
 
 @Module({
-  imports: [
-    PrismaModule,
-    LanguageModule,
-    MenuModule,
-    MenuItemModule,
-    PageModule,
-    ContentBlockModule,
-    GlobalContentModule,
-  ],
+  imports: [PrismaModule, LanguageModule, NavbarModule, NavbarItemModule, TextModule, TextContentModule, ConstantModule, FrontendModule],
 })
 export class AppModule {}

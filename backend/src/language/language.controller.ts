@@ -3,47 +3,44 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
+  Patch,
   Delete,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { LanguageService } from './language.service';
-import { Language } from '@prisma/client';
+import { CreateLanguage } from './dto/create-language.dto';
+import { UpdateLanguage } from './dto/update-language.dto';
 
-@Controller('admin/languages')
+@Controller('language')
 export class LanguageController {
   constructor(private readonly languageService: LanguageService) {}
 
   @Post()
-  create(
-    @Body()
-    dto: {
-      name_en: string;
-      name_native: string;
-      short_code: string;
-      logo_url?: string;
-    },
-  ) {
-    return this.languageService.create(dto);
+  create(@Body() createLanguageDto: CreateLanguage) {
+    return this.languageService.create(createLanguageDto);
   }
 
   @Get()
-  findAll(): Promise<Language[]> {
+  findAll() {
     return this.languageService.findAll();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string): Promise<Language> {
-    return this.languageService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.languageService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() dto: Partial<Language>) {
-    return this.languageService.update(+id, dto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateLanguageDto: UpdateLanguage,
+  ) {
+    return this.languageService.update(id, updateLanguageDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string): Promise<Language> {
-    return this.languageService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.languageService.remove(id);
   }
 }

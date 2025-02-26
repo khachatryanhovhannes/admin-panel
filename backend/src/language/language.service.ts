@@ -1,36 +1,53 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Language, Prisma } from '@prisma/client';
+import { CreateLanguage, UpdateLanguage } from './dto';
 
 @Injectable()
 export class LanguageService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: Prisma.LanguageCreateInput): Promise<Language> {
-    return this.prisma.language.create({ data });
+  async create(createLanguageDto: CreateLanguage) {
+    return this.prisma.language.create({
+      data: createLanguageDto,
+    });
   }
 
-  async findAll(): Promise<Language[]> {
+  async findAll() {
     return this.prisma.language.findMany();
   }
 
-  async findOne(id: number): Promise<Language> {
-    return this.prisma.language.findUniqueOrThrow({
+  async findOne(id: number) {
+    const language = await this.prisma.language.findUnique({
       where: { id },
     });
+
+    if (!language) {
+      throw new NotFoundException(`Language with ID ${id} not found`);
+    }
+
+    return language;
   }
 
-  async update(
-    id: number,
-    data: Prisma.LanguageUpdateInput,
-  ): Promise<Language> {
+  async update(id: number, updateLanguageDto: UpdateLanguage) {
+    const language = await this.findOne(id);
+
+    if (!language) {
+      throw new NotFoundException(`Language with ID ${id} not found`);
+    }
+
     return this.prisma.language.update({
       where: { id },
-      data,
+      data: updateLanguageDto,
     });
   }
 
-  async remove(id: number): Promise<Language> {
+  async remove(id: number) {
+    const language = await this.findOne(id);
+
+    if (!language) {
+      throw new NotFoundException(`Language with ID ${id} not found`);
+    }
+
     return this.prisma.language.delete({
       where: { id },
     });
