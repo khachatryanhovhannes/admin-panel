@@ -48,6 +48,14 @@ export class LanguageService {
       throw new NotFoundException(`Language with ID ${id} not found`);
     }
 
+    await this.prisma.navbar_item.deleteMany({
+      where: { languageId: id },
+    });
+
+    await this.prisma.text_content.deleteMany({
+      where: { languageId: id },
+    });
+
     return this.prisma.language.delete({
       where: { id },
     });
