@@ -6,11 +6,14 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { TextContentService } from './text_content.service';
 import { CreateTextContentDto } from './dto/create-text-content.dto';
 import { UpdateTextContentDto } from './dto/update-text-content.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('text-content')
 export class TextContentController {
   constructor(private readonly textContentService: TextContentService) {}

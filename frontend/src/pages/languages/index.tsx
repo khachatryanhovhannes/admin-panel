@@ -61,7 +61,7 @@ export default function Languages() {
       iconUrl: "",
       isActive: true,
     });
-    setEditingLanguage(null); // նաև մաքրում ենք խմբագրվող լեզուն
+    setEditingLanguage(null);
   };
 
   const fetchLanguages = async () => {

@@ -7,11 +7,14 @@ import {
   Patch,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { LanguageService } from './language.service';
 import { CreateLanguage } from './dto/create-language.dto';
 import { UpdateLanguage } from './dto/update-language.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('language')
 export class LanguageController {
   constructor(private readonly languageService: LanguageService) {}

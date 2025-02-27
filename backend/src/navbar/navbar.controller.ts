@@ -7,11 +7,14 @@ import {
   Patch,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { NavbarService } from './navbar.service';
 import { CreateNavbar } from './dto/create-navbar.dto';
 import { UpdateNavbar } from './dto/update-navbar.dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('navbar')
 export class NavbarController {
   constructor(private readonly navbarService: NavbarService) {}

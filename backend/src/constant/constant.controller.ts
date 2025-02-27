@@ -6,10 +6,13 @@ import {
   Patch,
   Param,
   Delete,
+  UseGuards,
 } from '@nestjs/common';
 import { ConstantService } from './constant.service';
 import { CreateConstantDto, UpdateConstantDto } from './dto';
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('constants')
 export class ConstantController {
   constructor(private readonly constantsService: ConstantService) {}
