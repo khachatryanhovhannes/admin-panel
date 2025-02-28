@@ -19,4 +19,9 @@ export class FrontendController {
   async getContent() {
     return this.frontEndService.getContent();
   }
+
+  @Get('images')
+  async getImages() {
+    return this.frontEndService.getImages();
+  }
 }

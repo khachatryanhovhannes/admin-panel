@@ -74,4 +74,14 @@ model Constants {
   id    Int    @id @default(autoincrement())
   key   String
   value String
+
+  @@map("constants")
+}
+
+model Images {
+  id       Int    @id @default(autoincrement())
+  key      String @unique
+  imageUrl String
+
+  @@map("images")
 }

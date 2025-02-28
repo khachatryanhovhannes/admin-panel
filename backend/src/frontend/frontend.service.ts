@@ -125,4 +125,16 @@ export class FrontendService {
       constants: formattedConstants,
     };
   }
+
+  async getImages() {
+    const images = await this.prisma.images.findMany();
+
+    const imagesObj = {};
+
+    images.forEach((image) => {
+      imagesObj[image.key] = image.imageUrl;
+    });
+
+    return imagesObj;
+  }
 }

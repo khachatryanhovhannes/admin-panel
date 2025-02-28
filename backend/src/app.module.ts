@@ -9,6 +9,7 @@ import { ConstantModule } from './constant/constant.module';
 import { FrontendModule } from './frontend/frontend.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { ImagesModule } from './images/images.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { ConfigModule } from '@nestjs/config';
     ConstantModule,
     FrontendModule,
     AuthModule,
+    ImagesModule,
   ],
 })
 export class AppModule {}
