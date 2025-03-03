@@ -15,8 +15,9 @@ model Language {
   iconUrl    String?
   isActive   Boolean? @default(true)
 
-  navbarItems  Navbar_item[]
-  Text_content Text_content[]
+  navbarItems   Navbar_item[]
+  Text_content  Text_content[]
+  Pages_content Pages_content[]
 
   @@map("language")
 }
@@ -84,4 +85,37 @@ model Images {
   imageUrl String
 
   @@map("images")
+}
+
+model Pages {
+  id       Int      @id @default(autoincrement())
+  title    String
+  slug     String
+  type     PageType
+  isActive Boolean  @default(true)
+
+  page_content Pages_content[]
+
+  @@map("pages")
+}
+
+model Pages_content {
+  id Int @id @default(autoincrement())
+
+  meta_title       String
+  meta_description String
+  keywords         String
+
+  title      String
+  content    String   @db.LongText
+  
+  language   Language @relation(fields: [languageId], references: [id])
+  languageId Int
+  pages      Pages?   @relation(fields: [pagesId], references: [id])
+  pagesId    Int?
+}
+
+enum PageType {
+  DYNAMIC
+  BLOG
 }

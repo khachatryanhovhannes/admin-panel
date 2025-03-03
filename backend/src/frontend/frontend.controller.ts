@@ -1,5 +1,6 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { FrontendService } from './frontend.service';
+import { PageType } from '@prisma/client';
 
 @Controller('frontend')
 export class FrontendController {
@@ -23,5 +24,14 @@ export class FrontendController {
   @Get('images')
   async getImages() {
     return this.frontEndService.getImages();
+  }
+
+  @Get('pages')
+  async getPageData(
+    @Query('language') language: string,
+    @Query('slug') slug: string,
+    @Query('type') pageType: PageType,
+  ) {
+    return this.frontEndService.getPageData(language, slug, pageType);
   }
 }

@@ -1,0 +1,21 @@
+.ql-toolbar .ql-stroke,
+.ql-toolbar .ql-blockquote {
+  fill: none;
+  stroke: #fff;
+  background-color: #2d3748;
+}
+
+.ql-toolbar .ql-fill {
+  fill: #fff;
+  stroke: none;
+  background-color: #2d3748;
+}
+
+.ql-toolbar .ql-picker {
+  color: #fff;
+  background-color: #2d3748 !important;
+}
+
+.ql-picker-options {
+  background-color: #2d3748 !important;
+}

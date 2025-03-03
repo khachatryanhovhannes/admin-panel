@@ -1,7 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { NavigationItem } from './types/frontend.types';
-import { Language, Text_content, Text, Constants } from '@prisma/client';
+import {
+  Language,
+  Text_content,
+  Text,
+  Constants,
+  PageType,
+} from '@prisma/client';
 
 @Injectable()
 export class FrontendService {
@@ -9,6 +15,15 @@ export class FrontendService {
 
   async getNavigation(): Promise<Record<string, NavigationItem[]>> {
     const navItems = await this.prisma.navbar.findMany({
+      where: {
+        isActive: true,
+        parentId: null,
+        items: {
+          some: {
+            isActive: true,
+          },
+        },
+      },
       include: {
         items: {
           include: {
@@ -95,6 +110,11 @@ export class FrontendService {
   > {
     const texts: (Text_content & { language: Language; text: Text })[] =
       await this.prisma.text_content.findMany({
+        where: {
+          language: {
+            isActive: true,
+          },
+        },
         include: {
           language: true,
           text: true,
@@ -136,5 +156,26 @@ export class FrontendService {
     });
 
     return imagesObj;
+  }
+
+  async getPageData(language: string, slug: string, type: PageType) {
+    return this.prisma.pages.findFirst({
+      where: {
+        slug: slug,
+        type: type,
+      },
+      include: {
+        page_content: {
+          where: {
+            language: {
+              shortName: language,
+            },
+          },
+          include: {
+            language: true,
+          },
+        },
+      },
+    });
   }
 }

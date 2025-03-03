@@ -10,6 +10,8 @@ import { FrontendModule } from './frontend/frontend.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { ImagesModule } from './images/images.module';
+import { PagesModule } from './pages/pages.module';
+import { PagesContentModule } from './pages-content/pages-content.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { ImagesModule } from './images/images.module';
     FrontendModule,
     AuthModule,
     ImagesModule,
+    PagesModule,
+    PagesContentModule,
   ],
 })
 export class AppModule {}
