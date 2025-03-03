@@ -1,5 +1,6 @@
 "use client";
 
+import { fetchLanguages } from "@/lib/api";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -18,14 +19,13 @@ export default function LanguageSwitcher({
   const [languages, setLanguages] = useState<Language[]>([]);
 
   useEffect(() => {
-    async function fetchLanguages() {
-      const res = await fetch("http://localhost:3000/frontend/languages");
-      const data = await res.json();
+    async function fetchAndSetLanguages() {
+      const data = await fetchLanguages();
       const langArray = Object.values(data) as Language[];
       setLanguages(langArray);
     }
 
-    fetchLanguages();
+    fetchAndSetLanguages();
   }, []);
 
   const switchLanguage = (lang: string) => {

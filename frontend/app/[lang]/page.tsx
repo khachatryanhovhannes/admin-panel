@@ -5,6 +5,7 @@ export async function generateMetadata({
 }: {
   params: { lang: string };
 }) {
+  const lang = await params;
   const content = await fetchPageContent(params.lang);
   return {
     title: content.metaTitle,
