@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreatePageDto, UpdatePageDto } from './dto';
+import { PageType } from '@prisma/client';
 
 @Injectable()
 export class PagesService {
@@ -12,8 +13,9 @@ export class PagesService {
     });
   }
 
-  async findAll() {
+  async findAll(type: PageType) {
     return this.prisma.pages.findMany({
+      where: { type },
       include: {
         page_content: true,
       },

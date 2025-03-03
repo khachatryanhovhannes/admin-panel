@@ -7,9 +7,11 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { PagesService } from './pages.service';
 import { CreatePageDto, UpdatePageDto } from './dto';
+import { PageType } from '@prisma/client';
 
 @Controller('pages')
 export class PagesController {
@@ -21,8 +23,8 @@ export class PagesController {
   }
 
   @Get()
-  findAll() {
-    return this.pagesService.findAll();
+  findAll(@Query('type') pageType: PageType) {
+    return this.pagesService.findAll(pageType);
   }
 
   @Get(':id')

@@ -178,4 +178,48 @@ export class FrontendService {
       },
     });
   }
+
+  async getBlogData(language: string, slug: string, skip = 0, take = 10) {
+    return this.prisma.pages.findMany({
+      where: {
+        slug: slug,
+        type: 'BLOG',
+      },
+      include: {
+        page_content: {
+          where: {
+            language: {
+              shortName: language,
+            },
+          },
+          include: {
+            language: true,
+          },
+        },
+      },
+      skip,
+      take,
+    });
+  }
+
+  async getBlogPost(language: string, slug: string) {
+    await this.prisma.pages.findFirst({
+      where: {
+        slug: slug,
+        type: 'BLOG',
+      },
+      include: {
+        page_content: {
+          where: {
+            language: {
+              shortName: language,
+            },
+          },
+          include: {
+            language: true,
+          },
+        },
+      },
+    });
+  }
 }

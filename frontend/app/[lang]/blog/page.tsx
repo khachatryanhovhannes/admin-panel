@@ -1,5 +1,5 @@
-
 import { fetchBlogData } from "@/lib/api";
+import Link from "next/link";
 
 async function Blog({ params }: { params: { lang: string } }) {
   const { lang } = params;
@@ -9,12 +9,10 @@ async function Blog({ params }: { params: { lang: string } }) {
   return (
     <div>
       {blogs.map((blog) => (
-        <div key={blog.id}>
+        <Link href={"/" + lang + "/blog/" + blog.slug} key={blog.slug}>
           <h2>{blog.title}</h2>
-          <div
-            dangerouslySetInnerHTML={{ __html: blog.content }}
-          ></div>
-        </div>
+          <div dangerouslySetInnerHTML={{ __html: blog.content }}></div>
+        </Link>
       ))}
     </div>
   );

@@ -1,7 +1,7 @@
 import instance from "./client";
 
 export const fetchAllPages = async () => {
-  const response = await instance.get("/pages");
+  const response = await instance.get("/pages?type=DYNAMIC");
   return response.data;
 };
 

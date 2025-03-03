@@ -21,11 +21,15 @@ export async function fetchPageContent(lang: string) {
     ...response.data.constants,
   };
 }
-export async function fetchPageData(lang: string, slug: string) {
+export async function fetchPageData(
+  lang: string,
+  slug: string,
+  type = "DYNAMIC"
+) {
   console.log(slug, lang);
   try {
     const response = await instance.get(
-      `/frontend/pages?slug=${slug}&language=${lang}&type=DYNAMIC`
+      `/frontend/pages?slug=${slug}&language=${lang}&type=${type}`
     );
 
     return response.data || {};
@@ -40,7 +44,11 @@ export async function fetchBlogData(lang: string, skip = 0, take = 10) {
     `/frontend/blog?type=BLOG&language=${lang}&skip=${skip}&take=${take}`
   );
 
-  return response.data.map((data) => {
-    return data.page_content[0]!;
-  });
+  console.log(response.data || {});
+
+  return response.data
+    .filter((data) => data.page_content.length)
+    .map((data) => {
+      return { slug: data.slug, ...data.page_content[0]! };
+    });
 }

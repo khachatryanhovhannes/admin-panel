@@ -18,6 +18,7 @@ import Home from "./pages/home";
 import ImagesManagement from "./pages/images";
 import PagesManagement from "./pages/pages";
 import "./App.css";
+import BlogPagesManagement from "./pages/blog";
 
 function Layout() {
   const { user } = useAuth();
@@ -39,6 +40,8 @@ function Layout() {
             <Link to="/admin/constants">Constants</Link>
             <Link to="/admin/images">Images</Link>
             <Link to="/admin/pages">Pages</Link>
+            <Link to="/admin/blog">Blog</Link>
+
             <LogoutButton />
           </nav>
         </aside>
@@ -58,6 +61,7 @@ function Layout() {
             <Route path="/admin/constants" element={<ConstantsManagement />} />
             <Route path="/admin/images" element={<ImagesManagement />} />
             <Route path="/admin/pages" element={<PagesManagement />} />
+            <Route path="/admin/blog" element={<BlogPagesManagement />} />
           </Route>
 
           <Route

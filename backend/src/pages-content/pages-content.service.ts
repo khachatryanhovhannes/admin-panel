@@ -10,10 +10,14 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { v4 as uuidv4 } from 'uuid';
 import * as cheerio from 'cheerio';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PagesContentService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly config: ConfigService,
+  ) {}
 
   async create(createPageContentDto: CreatePageContentDto) {
     const processedContent = await this.processContentImages(
@@ -120,7 +124,7 @@ export class PagesContentService {
           .then(() => {
             $element.attr(
               'src',
-              `http://localhost:3000/uploads/images/${filename}`,
+              `${this.config.get('BACK_END_URL')}/uploads/images/${filename}`,
             );
           })
           .catch(() => {
