@@ -7,7 +7,7 @@ export async function fetchLanguages() {
 }
 
 export async function fetchNavigation(lang: string) {
-  const response: AxiosResponse<Record<string, any>> = await instance.get(
+  const response: AxiosResponse<Record<string, string>> = await instance.get(
     "/frontend/navigation"
   );
   return response.data[lang] || [];
@@ -33,4 +33,14 @@ export async function fetchPageData(lang: string, slug: string) {
     console.error(err);
     return {};
   }
+}
+
+export async function fetchBlogData(lang: string, skip = 0, take = 10) {
+  const response = await instance.get(
+    `/frontend/blog?type=BLOG&language=${lang}&skip=${skip}&take=${take}`
+  );
+
+  return response.data.map((data) => {
+    return data.page_content[0]!;
+  });
 }
